@@ -2,16 +2,14 @@
 drop function if exists encryption_algorithm;
 
 create function if not exists encryption_algorithm(
-    in vv varchar(100),
-    in alg varchar(100)
+    in $pass varchar(100),
+    in $algo varchar(100)
 )
-returns varchar(100)
+    returns varchar(255)
 begin
-    if alg = "sha-256" then
-        return sha2(vv, 256);
-    elseif alg = "md5" then
-        return md5(vv);
-    else 
-        return "";
-    end if;
+    return case $algo
+        when "sha-256"  then sha2($pass, 256)
+        when "md5"      then md5($pass)
+        else ""
+    end;
 end;
